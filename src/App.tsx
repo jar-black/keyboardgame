@@ -3,7 +3,9 @@ import './App.css';
 import VisualKeyboard from './components/VisualKeyboard';
 import TypingArea from './components/TypingArea';
 import Results from './components/Results';
+import LevelSelector from './components/LevelSelector';
 import { generateRandomText } from './utils/textGenerator';
+import type { DifficultyLevel } from './utils/textGenerator';
 
 type GameState = 'ready' | 'playing' | 'finished';
 
@@ -16,6 +18,7 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [pressedKey, setPressedKey] = useState<string>('');
   const [timeLeft, setTimeLeft] = useState<number>(GAME_DURATION);
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(1);
 
   // Stats
   const [correctChars, setCorrectChars] = useState<number>(0);
@@ -23,7 +26,7 @@ function App() {
 
   // Initialize game
   const initializeGame = useCallback(() => {
-    const newText = generateRandomText(150);
+    const newText = generateRandomText(150, difficultyLevel);
     setText(newText);
     setTypedText('');
     setCurrentIndex(0);
@@ -31,7 +34,7 @@ function App() {
     setCorrectChars(0);
     setIncorrectChars(0);
     setGameState('ready');
-  }, []);
+  }, [difficultyLevel]);
 
   useEffect(() => {
     initializeGame();
@@ -145,6 +148,18 @@ function App() {
         />
       ) : (
         <div className="game-container">
+          <LevelSelector
+            currentLevel={difficultyLevel}
+            onLevelChange={(level) => {
+              setDifficultyLevel(level);
+              if (gameState === 'ready') {
+                const newText = generateRandomText(150, level);
+                setText(newText);
+              }
+            }}
+            disabled={gameState === 'playing'}
+          />
+
           <div className="game-info">
             <div className="info-item">
               <span className="info-label">Time Left:</span>
