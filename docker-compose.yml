@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "50627:80"
     container_name: keyboardgame-app
     restart: unless-stopped
     environment:
