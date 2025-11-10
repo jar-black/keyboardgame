@@ -148,6 +148,43 @@ function App() {
         />
       ) : (
         <div className="game-container">
+          <div className="game-main">
+            <div className="game-info">
+              <div className="info-item">
+                <span className="info-label">Time Left:</span>
+                <span className={`info-value ${timeLeft <= 10 ? 'warning' : ''}`}>
+                  {formatTime(timeLeft)}
+                </span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Progress:</span>
+                <span className="info-value">
+                  {currentIndex} / {text.length}
+                </span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Accuracy:</span>
+                <span className="info-value">
+                  {calculateStats().accuracy}%
+                </span>
+              </div>
+            </div>
+
+            {gameState === 'ready' && (
+              <div className="start-message">
+                Start typing to begin the 1-minute challenge!
+              </div>
+            )}
+
+            <TypingArea
+              text={text}
+              typedText={typedText}
+              currentIndex={currentIndex}
+            />
+
+            <VisualKeyboard pressedKey={pressedKey} />
+          </div>
+
           <LevelSelector
             currentLevel={difficultyLevel}
             onLevelChange={(level) => {
@@ -159,41 +196,6 @@ function App() {
             }}
             disabled={gameState === 'playing'}
           />
-
-          <div className="game-info">
-            <div className="info-item">
-              <span className="info-label">Time Left:</span>
-              <span className={`info-value ${timeLeft <= 10 ? 'warning' : ''}`}>
-                {formatTime(timeLeft)}
-              </span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Progress:</span>
-              <span className="info-value">
-                {currentIndex} / {text.length}
-              </span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Accuracy:</span>
-              <span className="info-value">
-                {calculateStats().accuracy}%
-              </span>
-            </div>
-          </div>
-
-          {gameState === 'ready' && (
-            <div className="start-message">
-              Start typing to begin the 1-minute challenge!
-            </div>
-          )}
-
-          <TypingArea
-            text={text}
-            typedText={typedText}
-            currentIndex={currentIndex}
-          />
-
-          <VisualKeyboard pressedKey={pressedKey} />
         </div>
       )}
     </div>
